@@ -106,8 +106,6 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
     { refreshInterval: 1000 }
   )
 
-  const [isTagging, setIsTagging] = useState(false)
-
   const avatarUrl = useAvatarUrl(user?.avatarData ?? null)
 
   return (
@@ -203,39 +201,33 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
               >
                 <QrReader
                   onScan={async (text) => {
-                    if (isTagging) return
-                    setIsTagging(true)
-                    try {
-                      const code = text.split('/').slice(-1)[0]
-                      if (code.split('-').length !== 4) {
-                        return toast.error('invalid qr code')
-                      }
-                      if (code !== scannedCode) {
-                        setScannedCode(code)
-                        toast.promise(
-                          fetch('/api/tag_user', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                              taggedBadgeCode: code,
-                              taggerId: loggedIn.userId,
-                            }),
-                          }).then((resp) => {
-                            if (!resp.ok) {
-                              throw new Error('bad bad bad')
-                            }
+                    const code = text.split('/').slice(-1)[0]
+                    if (code.split('-').length !== 4) {
+                      return toast.error('invalid qr code')
+                    }
+                    if (code !== scannedCode) {
+                      setScannedCode(code)
+                      toast.promise(
+                        fetch('/api/tag_user', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            taggedBadgeCode: code,
+                            taggerId: loggedIn.userId,
                           }),
-                          {
-                            loading: 'scanning...',
-                            success: <b>your loyalty will be rewarded.</b>,
-                            error: <b>that wasn't the target, bozo</b>,
+                        }).then((resp) => {
+                          if (!resp.ok) {
+                            throw new Error('bad bad bad')
                           }
-                        )
-                      }
-                    } finally {
-                      setIsTagging(false)
+                        }),
+                        {
+                          loading: 'scanning...',
+                          success: <b>your loyalty will be rewarded.</b>,
+                          error: <b>that wasn't the target, bozo</b>,
+                        }
+                      )
                     }
                   }}
                 />
