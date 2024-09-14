@@ -1,26 +1,116 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: 'Comic Sans Bundled';
+  src: url('/fonts/comic-sans-ms.ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@font-face {
+  font-family: 'Comic Sans Bundled';
+  src: url('/fonts/comic-sans-ms-bold.ttf');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --purple: rgb(162, 0, 255);
+}
+
+html,
+body,
+#__next {
+  height: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: 'Comic Sans MS', Arial, Helvetica, sans-serif;
-  margin: 0;
-  padding: 0;
+  color: #ededed;
+  background: #0a0a0a;
+  font-family: 'Comic Sans Bundled', 'Comic Sans MS', 'Comic Sans', sans-serif;
+  padding: 10px;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.login-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  text-align: center;
+
+  & .brand {
+    margin: 0;
+    margin-bottom: 10vh;
+    color: cyan;
+
+    @media (max-height: 800px) {
+      margin-bottom: 5vh;
+    }
+  }
+  & .subheading {
+    font-size: 1.8em;
+    margin: 0;
+    color: #b8b8b8;
+  }
+
+  & .error {
+    color: rgb(255, 116, 116);
+    margin-bottom: 0;
+  }
+
+  & h1 {
+    font-size: 2.5em;
+    margin: 0;
+  }
+
+  & .qr-reader {
+    margin-top: 40px;
+  }
+
+  & input,
+  button {
+    font-size: 1.4em;
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: white;
+    font-family: inherit;
+    padding: 20px 10px;
+    border: 4px solid white;
+  }
+
+  & input {
+    color: black;
+    margin: 20px 0;
+
+    &:focus {
+      outline: none;
+      border-color: var(--purple);
+    }
+  }
+
+  & button {
+    background: var(--purple);
+    border-color: rgb(115, 4, 179);
+    color: white;
+  }
+
+  & .awareness {
+    font-size: 1.4em;
+    color: #b8b8b8;
+    margin-top: 10px;
+
+    & p {
+      margin: 20px 0;
+    }
   }
 }
 
@@ -32,5 +122,5 @@ tr {
 }
 
 table {
-  border-spacing: 0
+  border-spacing: 0rding;
 }

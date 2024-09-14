@@ -12,21 +12,16 @@ export default async function handler(
 ) {
   if (req.method !== "POST") res.status(400).json({error: 'INCORRECT_METHOD'})
 
-  const data = req.body
-  const phone: string = req.body.phone
-  const username: string = req.body.username
+  const userId: number = req.body.phone
 
-  if (!phone || !username) return res.status(400).json({error: 'MALFORMED_DATA'})
+  if (!userId) return res.status(400).json({error: 'MALFORMED_DATA'})
 
-  await prisma.user.upsert({
+  await prisma.user.update({
     where: {
-      username: username
+      id: userId
     },
-    create: {
-      username: username
-    },
-    update: {
-      phone: phone
+    data: {
+      lastInteractedAt: new Date()
     }
   })
 

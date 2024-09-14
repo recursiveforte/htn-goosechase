@@ -13,14 +13,12 @@ datasource db {
 
 model User {
   id               Int         @id @default(autoincrement())
-  phone            String?
-  username         String      @unique
+  phone            String
+  badgeCode        String      @unique
   createdAt        DateTime    @default(now())
   lastInteractedAt DateTime    @default(now())
   taggings         Challenge[] @relation("taggee")
   tags             Challenge[] @relation("tagger")
-  Room             Room?       @relation(fields: [roomId], references: [id])
-  roomId           Int?
 }
 
 // a challenge is active if there is no tagger or it's been running for less than 10 minutes
@@ -32,13 +30,4 @@ model Challenge {
   tagger    User?     @relation("tagger", fields: [taggerId], references: [id])
   taggee    User      @relation("taggee", fields: [taggeeId], references: [id])
   taggedAt  DateTime?
-  room      Room      @relation(fields: [roomId], references: [id])
-  roomId    Int
-}
-
-model Room {
-  id         Int         @id @default(autoincrement())
-  name       String
-  users      User[]
-  challenges Challenge[]
 }

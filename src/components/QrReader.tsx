@@ -1,13 +1,18 @@
-import { ReactNode } from 'react'
+import { ReactNode, useRef } from 'react'
 import { QrReader as ReactQrReader } from 'react-qr-reader'
 
 export interface QrReaderProps {
+  className?: string
   onScan: (code: string) => void
 }
 
 export default function QrReader(props: QrReaderProps): ReactNode {
+  const onScanRef = useRef(props.onScan)
+  onScanRef.current = props.onScan
+
   return (
     <ReactQrReader
+      className={props.className}
       scanDelay={0}
       constraints={{
         aspectRatio: { exact: 1 },
@@ -15,13 +20,14 @@ export default function QrReader(props: QrReaderProps): ReactNode {
         frameRate: 30,
       }}
       containerStyle={{
+        width: '100%',
         maxWidth: 500,
       }}
       ViewFinder={ViewFinder}
       onResult={(result) => {
         const text = result?.getText()
         if (!text) return
-        props.onScan(text)
+        onScanRef.current(text)
       }}
     />
   )
