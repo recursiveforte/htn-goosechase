@@ -10,9 +10,10 @@ export default async function handler(
   if (req.method !== 'POST')
     return res.status(400).json({ error: 'INCORRECT_METHOD' })
 
-  const { taggedId } = req.body
+  const { taggedId, roomName } = req.body
 
-  if (!taggedId) return res.status(400).json({ error: 'MALFORMED_DATA' })
+  if (!taggedId || !roomName)
+    return res.status(400).json({ error: 'MALFORMED_DATA' })
 
   await prisma.challenge.updateMany({
     where: {
@@ -38,6 +39,7 @@ export default async function handler(
   const challenge = await prisma.challenge.create({
     data: {
       taggedId,
+      roomName,
     },
   })
 

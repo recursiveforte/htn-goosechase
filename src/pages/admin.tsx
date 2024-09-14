@@ -13,6 +13,7 @@ type FullUser = User & {
 const Admin = (props: Props) => {
   const [users, setUsers] = useState<FullUser[]>([])
   const [filteredUsers, setFilteredUsers] = useState<FullUser[]>([])
+  const [roomName, setRoomName] = useState('the food tent')
   const query = useSearchParams()
 
   useEffect(() => {
@@ -39,62 +40,76 @@ const Admin = (props: Props) => {
       <div className="search-container">
         <input
           type="text"
-          placeholder="Search by Badge Code"
+          placeholder="Search by Name"
           className="search-input"
           onChange={(e) => {
             const searchTerm = e.target.value.toLowerCase()
             const filteredUsers = users.filter((user) =>
-              user.badgeCode.toLowerCase().includes(searchTerm)
+              user.name.toLowerCase().includes(searchTerm)
             )
             setFilteredUsers(filteredUsers)
           }}
         />
       </div>
 
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Room Name"
+          className="search-input"
+          onChange={(e) => {
+            setRoomName(e.target.value)
+          }}
+        />
+      </div>
+
       <table className="admin-table">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Last Interacted At</th>
-            <th>Score</th>
-            <th>Actions</th>
-          </tr>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Last Interacted At</th>
+          <th>Score</th>
+          <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
-          {filteredUsers.map((user) => (
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.name}</td>
-              <td>
-                {user.lastInteractedAt
-                  ? new Date(user.lastInteractedAt).toLocaleString()
-                  : 'N/A'}
-              </td>
-              <td>{user.score}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    fetch('/api/challenge/new', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({ taggedId: user.id }),
+        {filteredUsers.map((user) => (
+          <tr key={user.id}>
+            <td>{user.id}</td>
+            <td>{user.name}</td>
+            <td>
+              {user.lastInteractedAt
+                ? new Date(user.lastInteractedAt).toLocaleString()
+                : 'N/A'}
+            </td>
+            <td>{user.score}</td>
+            <td>
+              <button
+                onClick={() => {
+                  fetch('/api/challenge/new', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      taggedId: user.id,
+                      roomName
+                    }),
+                  })
+                    .then((res) => res.json())
+                    .then((data) => {
+                      alert(
+                        `GAME STARTED\nResponse:\n${JSON.stringify(data)}`
+                      )
                     })
-                      .then((res) => res.json())
-                      .then((data) => {
-                        alert(
-                          `GAME STARTED\nResponse:\n${JSON.stringify(data)}`
-                        )
-                      })
-                  }}
-                >
-                  Start Game
-                </button>
-              </td>
-            </tr>
-          ))}
+                }}
+              >
+                Start Game
+              </button>
+            </td>
+          </tr>
+        ))}
         </tbody>
       </table>
     </div>

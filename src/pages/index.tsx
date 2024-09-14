@@ -131,7 +131,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
         }}
       >
         <b>
-          <i>the game is to be played at the food tent.</i>
+          <i>the game is to be played at {challenge?.data?.roomName ?? "the food tent"}.</i>
         </b>{' '}
         {/* @ts-ignore */}
       </marquee>
