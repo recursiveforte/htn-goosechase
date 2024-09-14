@@ -83,7 +83,10 @@ export default async function handler(
 
   for (const user of usersToNotify) {
     if (!user.phone) continue
-    await sendTextMessage(user.phone, `the target has been tagged.`)
+    await sendTextMessage(
+      user.phone,
+      `the target has been tagged. stay alert, gosling.`
+    )
   }
 
   const tagger = await prisma.user.findUnique({
