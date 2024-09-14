@@ -43,6 +43,7 @@ export default async function handler(
         },
         data: {
             taggerId: taggerId,
+            taggedAt: new Date()
         }
     })
 
