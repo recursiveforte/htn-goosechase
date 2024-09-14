@@ -94,7 +94,7 @@ export default async function handler(
 
   await sendTextMessage(
     tagged!.phone,
-    `you've been tagged by ${tagged!.name.toLowerCase()}. you got +${score(currentChallenge)} points`
+    `you've been tagged by ${tagger!.name.toLowerCase()}. you got +${score(currentChallenge)} points`
   )
 
   for (const user of usersToNotify) {
