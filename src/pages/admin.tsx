@@ -35,7 +35,7 @@ const Admin = (props: Props) => {
 
   return (
     <div className="admin-container">
-      <h1 className="admin-title">Admin</h1>
+      <h1 className="admin-title">Admin (count: {users.length})</h1>
 
       <div className="search-container">
         <input
@@ -65,51 +65,51 @@ const Admin = (props: Props) => {
 
       <table className="admin-table">
         <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Last Interacted At</th>
-          <th>Score</th>
-          <th>Actions</th>
-        </tr>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Last Interacted At</th>
+            <th>Score</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
-        {filteredUsers.map((user) => (
-          <tr key={user.id}>
-            <td>{user.id}</td>
-            <td>{user.name}</td>
-            <td>
-              {user.lastInteractedAt
-                ? new Date(user.lastInteractedAt).toLocaleString()
-                : 'N/A'}
-            </td>
-            <td>{user.score}</td>
-            <td>
-              <button
-                onClick={() => {
-                  fetch('/api/challenge/new', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      taggedId: user.id,
-                      roomName
-                    }),
-                  })
-                    .then((res) => res.json())
-                    .then((data) => {
-                      alert(
-                        `GAME STARTED\nResponse:\n${JSON.stringify(data)}`
-                      )
+          {filteredUsers.map((user) => (
+            <tr key={user.id}>
+              <td>{user.id}</td>
+              <td>{user.name}</td>
+              <td>
+                {user.lastInteractedAt
+                  ? new Date(user.lastInteractedAt).toLocaleString()
+                  : 'N/A'}
+              </td>
+              <td>{user.score}</td>
+              <td>
+                <button
+                  onClick={() => {
+                    fetch('/api/challenge/new', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        taggedId: user.id,
+                        roomName,
+                      }),
                     })
-                }}
-              >
-                Start Game
-              </button>
-            </td>
-          </tr>
-        ))}
+                      .then((res) => res.json())
+                      .then((data) => {
+                        alert(
+                          `GAME STARTED\nResponse:\n${JSON.stringify(data)}`
+                        )
+                      })
+                  }}
+                >
+                  Start Game
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
