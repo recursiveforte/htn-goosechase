@@ -6,9 +6,6 @@ type ResponseData = {
   error?: "MALFORMED_DATA" | "INCORRECT_METHOD" | "NO_CHALLENGE"
   data?: {
     createdAt: Date,
-    room: {
-      name: string
-    }
     tagger: {
       id: number,
       username: string
@@ -32,9 +29,6 @@ export default async function handler(
 
   res.status(200).json({data: {
     createdAt: currentChallenge.createdAt,
-    room: {
-      name: currentChallenge.room.name,
-    },
     taggee: {
       id: currentChallenge.taggee.id,
       username: currentChallenge.taggee.username

@@ -11,6 +11,6 @@ export const getCurrentChallenge = () => prisma.challenge.findFirst({
       id: 'desc'
     },
     include: {
-      taggee: true, tagger: true, room: true
+      taggee: true, tagger: true
     },
   })
