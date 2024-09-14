@@ -12,25 +12,23 @@ export default async function handler(
 ) {
   if (req.method !== 'POST') res.status(400).json({ error: 'INCORRECT_METHOD' })
 
-  const data = req.body
-  const userId: number = req.body.userId
-  const roomId: number = req.body.userId
+  // const userId: number = req.body.phone
 
-  if (!userId || !roomId)
-    return res.status(400).json({ error: 'MALFORMED_DATA' })
+  // if (!userId || !roomId)
+  //   return res.status(400).json({ error: 'MALFORMED_DATA' })
 
-  await prisma.room.update({
-    where: {
-      id: roomId,
-    },
-    data: {
-      users: {
-        connect: {
-          id: userId,
-        },
-      },
-    },
-  })
+  // await prisma.user.update({
+  //   where: {
+  //     id: roomId,
+  //   },
+  //   data: {
+  //     users: {
+  //       connect: {
+  //         id: userId,
+  //       },
+  //     },
+  //   },
+  // })
 
   return res.status(200).json({})
 }
