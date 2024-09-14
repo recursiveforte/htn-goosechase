@@ -75,18 +75,19 @@ const Admin = (props: Props) => {
               <td>
                 <button
                   onClick={() => {
-                     fetch('/api/challenge/new', {
-                       method: 'POST',
-                       headers: {
-                         "Content-Type": "application/json",
-                       },
-                       body: JSON.stringify({ taggedId: user.id }),
-                     })
-                       .then((res) => res.json())
-                       .then((data) => {
-                         console.log(data)
-                       })
-
+                    fetch('/api/challenge/new', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ taggedId: user.id }),
+                    })
+                      .then((res) => res.json())
+                      .then((data) => {
+                        alert(
+                          `GAME STARTED\nResponse:\n${JSON.stringify(data)}`
+                        )
+                      })
                   }}
                 >
                   Start Game
