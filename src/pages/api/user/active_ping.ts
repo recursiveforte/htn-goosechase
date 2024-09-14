@@ -12,6 +12,7 @@ export default async function handler(
 ) {
   // if (req.method !== "POST") res.status(400).json({error: 'INCORRECT_METHOD'})
 
+  // @ts-ignore // TODO: sam made me do this :(
   const userId: number = req.query.userId && parseInt(req.query.userId)
 
   if (!userId) return res.status(400).json({ error: 'MALFORMED_DATA' })
@@ -25,5 +26,11 @@ export default async function handler(
     },
   })
 
-  return res.status(200).json(user)
+  // @ts-ignore // TODO: sam made me do this :(
+  return res.status(200).json([user].map(data => {
+    return {
+      ...data,
+      phone: null
+    }
+  })[0])
 }

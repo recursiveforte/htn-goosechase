@@ -7,12 +7,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'POST') res.status(400).json({ error: 'INCORRECT_METHOD' })
+  if (req.method !== 'POST') return res.status(400).json({ error: 'INCORRECT_METHOD' })
 
   const {taggedId} = req.body
 
   if (!taggedId)
-    res.status(400).json({ error: 'MALFORMED_DATA' })
+    return res.status(400).json({ error: 'MALFORMED_DATA' })
 
   await prisma.challenge.updateMany({
     where: {
@@ -48,15 +48,14 @@ export default async function handler(
 
   await sendTextMessage(
     tagged.phone,
-    'you are the taggee! get points by getting tagged as soon as possible.'
+    'you are the taggee! get points by getting tagged as soon as possible.\n\ngoosechase.club\nSTOP to leave the game'
   )
 
   for (const user of otherUsers) {
     if (!user.phone) continue
     await sendTextMessage(
       user.phone,
-      `a challenge begins. tag ${taggedName} ASAP
-      \ngoosechase.club`
+      `a challenge begins. tag ${taggedName} ASAP\n\ngoosechase.club\nSTOP to leave the game`
     )
   }
 

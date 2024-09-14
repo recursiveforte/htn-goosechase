@@ -55,7 +55,7 @@ const Admin = (props: Props) => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Badge Code</th>
+            <th>Name</th>
             <th>Last Interacted At</th>
             <th>Score</th>
             <th>Actions</th>
@@ -65,7 +65,7 @@ const Admin = (props: Props) => {
           {filteredUsers.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
-              <td>{user.badgeCode}</td>
+              <td>{user.name}</td>
               <td>
                 {user.lastInteractedAt
                   ? new Date(user.lastInteractedAt).toLocaleString()
