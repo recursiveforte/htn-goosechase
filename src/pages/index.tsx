@@ -38,7 +38,7 @@ function Game({loginState, loggedIn}: {loginState: any, loggedIn: any}) {
     <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
       { /* @ts-ignore */ }
       <marquee style={{ fontSize: '24px', width: '100vw', paddingTop: '16px', paddingBottom: '16px', background: '#a633d6' }}>
-        <b><i>The game is being played at dinner! Join us.</i></b> { /* @ts-ignore */ }
+        <b><i>The game is being played at dinner! Join us.</i></b> { /* @ts-ignore */}
       </marquee>
       {!leaderboardOpen && <>
         <div style={{ width: '500px', height: '500px'}}>

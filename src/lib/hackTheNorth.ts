@@ -55,13 +55,17 @@ export async function lookupBadge(badgeCode: string): Promise<BadgeData> {
     errors?: Array<{ message: string }>
     data: {
       handleNetworkingScan: {
-        hackerNetworkingPayload: BadgeData
+        hackerNetworkingPayload: BadgeData | null
       }
     }
   }
 
   if (json.errors && json.errors.length > 0) {
     throw new Error(json.errors[0].message)
+  }
+
+  if (json.data.handleNetworkingScan.hackerNetworkingPayload === null) {
+    throw new Error('No worky for sponsors')
   }
 
   return json.data.handleNetworkingScan.hackerNetworkingPayload

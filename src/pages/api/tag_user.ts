@@ -56,7 +56,5 @@ export default async function handler(
     },
   })
 
-  // TODO: logic to start new challenge
-
   res.status(200).json({})
 }
