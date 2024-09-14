@@ -7,38 +7,37 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'POST') return res.status(400).json({ error: 'INCORRECT_METHOD' })
+  if (req.method !== 'POST')
+    return res.status(400).json({ error: 'INCORRECT_METHOD' })
 
-  const {taggedId} = req.body
+  const { taggedId } = req.body
 
-  if (!taggedId)
-    return res.status(400).json({ error: 'MALFORMED_DATA' })
+  if (!taggedId) return res.status(400).json({ error: 'MALFORMED_DATA' })
 
   await prisma.challenge.updateMany({
     where: {
-      invalidated: false
+      invalidated: false,
     },
     data: {
-      invalidated: true
+      invalidated: true,
     },
   })
 
-  const tagged = await prisma.user.findUnique({where: {id: taggedId}})
+  const tagged = await prisma.user.findUnique({ where: { id: taggedId } })
 
   const otherUsers = await prisma.user.findMany({
     where: {
       id: {
-        not: taggedId
-      }
+        not: taggedId,
+      },
     },
   })
 
-  if (!tagged)
-    return res.status(400).json({ error: 'RESOURCE_DNE' })
+  if (!tagged) return res.status(400).json({ error: 'RESOURCE_DNE' })
 
   const challenge = await prisma.challenge.create({
     data: {
-      taggedId
+      taggedId,
     },
   })
 
@@ -48,14 +47,26 @@ export default async function handler(
 
   await sendTextMessage(
     tagged.phone,
-    'you are the taggee! get points by getting tagged as soon as possible.\n\ngoosechase.club\nSTOP to leave the game'
+    `
+you are it. get someone to use goosechase.club to scan your badge.
+
+the faster, the more points you earn.
+
+you will be greatly rewarded.
+    `.trim()
   )
 
   for (const user of otherUsers) {
     if (!user.phone) continue
     await sendTextMessage(
       user.phone,
-      `a challenge begins. tag ${taggedName} ASAP\n\ngoosechase.club\nSTOP to leave the game`
+      `
+a challenge begins in the food tent.
+
+find ${taggedName.toLowerCase()} ASAP and scan their badge with goosechase.club to earn points.
+
+you will be greatly rewarded. (or reply STOP to leave the game forever)
+      `.trim()
     )
   }
 
