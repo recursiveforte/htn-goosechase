@@ -56,5 +56,22 @@ export default async function handler(
     },
   })
 
+  const usersToNotify = await prisma.user.findMany({
+    where: {
+      lastInteractedAt: {
+        get: new Date(Date.now() - 10 * 60 * 1000)
+      }
+    },
+  })
+
+  for (const user of usersToNotify) {
+    if (!user.phone) continue
+    await sendTextMessage(
+      user.phone,
+      `they've been tagged!
+      \ngoosechase.club`
+    )
+  }
+
   res.status(200).json({})
 }
