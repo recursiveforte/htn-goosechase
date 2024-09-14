@@ -15,6 +15,8 @@ model User {
   id               Int         @id @default(autoincrement())
   phone            String
   badgeCode        String      @unique
+  name             String      @default("")
+  avatarData       Bytes?
   createdAt        DateTime    @default(now())
   lastInteractedAt DateTime    @default(now())
   taggings         Challenge[] @relation("tagged")
@@ -28,6 +30,6 @@ model Challenge {
   taggedId  Int
   createdAt DateTime  @default(now())
   tagger    User?     @relation("tagger", fields: [taggerId], references: [id])
-  tagged   User      @relation("tagged", fields: [taggedId], references: [id])
+  tagged    User      @relation("tagged", fields: [taggedId], references: [id])
   taggedAt  DateTime?
 }

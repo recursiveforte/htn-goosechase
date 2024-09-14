@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/db/prisma'
-import { BadgeData, lookupBadge } from '@/lib/hackTheNorth'
+import { BadgeData, getBadgeAvatarUrl, lookupBadge } from '@/lib/hackTheNorth'
 import { errorString } from '@/lib/util'
 import parsePhoneNumberFromString from 'libphonenumber-js'
 import { ScanBadgeResponse } from './scanBadge'
@@ -35,6 +35,8 @@ export default async function handler(
     } satisfies ScanBadgeResponse)
   }
 
+  const avatarUrl = await getBadgeAvatarUrl(badge)
+
   await sendTextMessage(
     parsedPhoneNumber.format('E.164'),
     `goosechase is now aware of you. you'll hear from us when you least expect it.`
@@ -42,6 +44,8 @@ export default async function handler(
 
   const user = await prisma.user.create({
     data: {
+      name: badge.name,
+      avatarUrl,
       phone: parsedPhoneNumber.format('E.164'),
       badgeCode,
     },
