@@ -281,7 +281,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
           </p>
 
           {leaderboard
-            ?.slice(0, 100)
+            ?.slice(0, 50)
             .map((user: any, i: number) => (
               <LeaderboardItem
                 rank={i + 1}
