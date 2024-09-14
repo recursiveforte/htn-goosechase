@@ -21,7 +21,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  if (req.method !== 'GET') res.status(400).json({ error: 'INCORRECT_METHOD' })
+  if (req.method !== 'GET') return res.status(400).json({ error: 'INCORRECT_METHOD' })
 
   const currentChallenge = await getCurrentChallenge()
 

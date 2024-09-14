@@ -1,6 +1,8 @@
 import prisma from '../../lib/db/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getCurrentChallenge } from '@/lib/db/challenge'
+import { sendTextMessage } from '@/lib/twilio'
+import { score } from '@/pages/api/user/get_all'
 
 type ResponseData = {
   error?:
@@ -22,18 +24,18 @@ export default async function handler(
   const taggerId: number = data.taggerId
 
   if (!taggedBadgeCode || !taggerId)
-    res.status(400).json({ error: 'MALFORMED_DATA' })
+    return res.status(400).json({ error: 'MALFORMED_DATA' })
 
-  const currentChallenge = await getCurrentChallenge()
+  let currentChallenge = await getCurrentChallenge()
 
   if (!currentChallenge) return res.status(400).json({ error: 'NO_CHALLENGE' })
 
   if (currentChallenge.tagged.badgeCode != taggedBadgeCode) {
-    res.status(400).json({ error: 'INCORRECT_TAGGED' })
+    return res.status(400).json({ error: 'INCORRECT_TAGGED' })
   }
 
   if (currentChallenge.taggedAt != null) {
-    res.status(400).json({ error: 'INCORRECT_TAGGED' })
+    return res.status(400).json({ error: 'INCORRECT_TAGGED' })
   }
 
   const tagged = await prisma.user.findUnique({
@@ -42,11 +44,13 @@ export default async function handler(
     },
   })
 
+
+  console.log("tagger, tagged", taggerId, tagged?.id)
   if (tagged?.id == taggerId) {
-    res.status(400).json({ error: 'INCORRECT_TAGGED' })
+    return res.status(400).json({ error: 'INCORRECT_TAGGED' })
   }
 
-  await prisma.challenge.update({
+  currentChallenge = await prisma.challenge.update({
     where: {
       id: currentChallenge.id,
     },
@@ -54,7 +58,53 @@ export default async function handler(
       taggerId: taggerId,
       taggedAt: new Date(),
     },
+    include: {
+      tagged: true, tagger: true
+    }
   })
+
+  const usersToNotify = await prisma.user.findMany({
+    where: {
+      lastInteractedAt: {
+        gt: new Date(Date.now() - 10 * 60 * 1000)
+      },
+      NOT: {
+        OR: [
+          {
+            id: taggerId,
+          },
+          {
+            id: tagged?.id
+          }
+        ]
+      }
+    },
+  })
+
+  for (const user of usersToNotify) {
+    if (!user.phone) continue
+    await sendTextMessage(
+      user.phone,
+      `they’ve been tagged!
+      \ngoosechase.club`
+    )
+  }
+
+  const tagger = await prisma.user.findUnique({
+    where: {
+      id: taggerId,
+    }
+  })
+
+  await sendTextMessage(
+    tagger!.phone,
+    `you've tagged ${tagged!.name}! you got +${score(currentChallenge)} points`
+  )
+
+  await sendTextMessage(
+    tagged!.phone,
+    `you've been tagged by ${tagged!.name}! you got +${score(currentChallenge)}`
+  )
 
   res.status(200).json({})
 }

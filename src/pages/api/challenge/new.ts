@@ -7,12 +7,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'POST') res.status(400).json({ error: 'INCORRECT_METHOD' })
+  if (req.method !== 'POST') return res.status(400).json({ error: 'INCORRECT_METHOD' })
 
   const {taggedId} = req.body
 
   if (!taggedId)
-    res.status(400).json({ error: 'MALFORMED_DATA' })
+    return res.status(400).json({ error: 'MALFORMED_DATA' })
 
 
   const tagged = await prisma.user.findUnique({where: {id: taggedId}})
@@ -48,7 +48,8 @@ export default async function handler(
     await sendTextMessage(
       user.phone,
       `a challenge begins. tag ${taggedName} ASAP
-      \ngoosechase.club`
+      \ngoosechase.club
+      \n\nSTOP to opt out`
     )
   }
 

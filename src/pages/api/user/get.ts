@@ -13,11 +13,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  if (req.method !== 'GET') res.status(400).json({ error: 'INCORRECT_METHOD' })
+  if (req.method !== 'GET') return res.status(400).json({ error: 'INCORRECT_METHOD' })
 
   const userId: number = req.body.userId
 
-  if (!userId) res.status(400).json({ error: 'MALFORMED_DATA' })
+  if (!userId) return res.status(400).json({ error: 'MALFORMED_DATA' })
 
   const user = await prisma.user.findUnique({
     where: {

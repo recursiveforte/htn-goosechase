@@ -9,7 +9,6 @@ import { getUserState, setUserState, UserState } from '@/lib/userState'
 import { CreateAccountResponse } from './api/user/createAccount'
 import useSWR from 'swr'
 import { User } from '@prisma/client'
-import { AnimatePresence, motion } from 'framer-motion'
 
 // @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json())
@@ -139,7 +138,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
 
       {!leaderboardOpen &&
         (challenge ? (
-          challenge.tagged.id === loggedIn.userId ? (
+          challenge.data.tagged.id === loggedIn.userId ? (
             <div
               style={{
                 display: 'flex',
@@ -177,7 +176,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
                   the current target is:
                 </p>
                 <h1 style={{ margin: 0 }}>
-                  {challenge.tagged.name.toLowerCase()}
+                  {challenge.data.tagged.name.toLowerCase()}
                 </h1>
                 <h3
                   style={{
@@ -191,63 +190,66 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
                 </h3>
               </div>
 
-              <div
-                style={{
-                  width: 'min(500px, 100vw)',
-                  height: 'min(500px, 100vw)',
-                }}
-              >
-                <QrReader
-                  onScan={async (text) => {
-                    const code = text.split('/').slice(-1)[0]
-                    if (code.split('-').length !== 4) {
-                      return toast.error('invalid qr code')
-                    }
-                    if (code !== scannedCode) {
-                      setScannedCode(code)
-                      toast.promise(
-                        fetch('/api/tag_user', {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                          },
-                          body: JSON.stringify({
-                            taggedBadgeCode: code,
-                            taggerId: loggedIn.userId,
-                          }),
+            <div
+              style={{
+                width: 'min(500px, 100vw)',
+                height: 'min(500px, 100vw)',
+              }}
+            >
+              <QrReader
+                onScan={async (text) => {
+                  const code = text.split('/').slice(-1)[0]
+                  if (code.split('-').length !== 4) {
+                    return toast.error('invalid qr code')
+                  }
+                  if (code !== scannedCode) {
+                    setScannedCode(code)
+                    toast.promise(
+                      fetch('/api/tag_user', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          taggedBadgeCode: code,
+                          taggerId: loggedIn.userId,
                         }),
-                        {
-                          loading: 'scanning...',
-                          success: <b>your loyalty will be rewarded.</b>,
-                          error: <b>that wasn't the target, bozo</b>,
+                      }).then(resp => {
+                        if (!resp.ok) {
+                          throw new Error("bad bad bad")
                         }
-                      )
-                    }
-                  }}
-                />
-              </div>
-            </>
-          )
-        ) : (
-          <div
-            className="login-form"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-            }}
-          >
-            <h1>hi {loginState.userState.badge.name.toLowerCase()}.</h1>
-            <div className="awareness">
-              <p>
-                <span style={{ color: 'cyan' }}>goosechase</span> is aware of
-                you.
-              </p>
-              <p>you'll hear from us when you least expect it.</p>
-              <p>enlist your friends and you will all be rewarded.</p>
+                      }),
+                      {
+                        loading: 'scanning...',
+                        success: <b>your loyalty will be rewarded.</b>,
+                        error: <b>that wasn't the target, bozo</b>,
+                      }
+                    )
+                  }
+                }}
+              />
             </div>
+          </>
+        )
+      ) : (
+        <div
+          className="login-form"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          <h1>hi {loginState.userState.badge.name.toLowerCase()}.</h1>
+          <div className="awareness">
+            <p>
+              <span style={{ color: 'cyan' }}>goosechase</span> is aware of you.
+            </p>
+            <p>you'll hear from us when you least expect it.</p>
+            <p>enlist your friends and you will all be rewarded.</p>
           </div>
-        ))}
+        </div>
+      ))}
 
       {leaderboardOpen && (
         <div

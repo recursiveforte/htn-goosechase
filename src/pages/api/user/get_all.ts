@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/db/prisma'
 import { Challenge } from '@prisma/client'
 
-function score(tagging: Challenge) {
+export function score(tagging: Challenge) {
   if (tagging.taggedAt) {
     return Math.ceil(
       500 *
