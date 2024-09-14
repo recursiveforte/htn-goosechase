@@ -23,3 +23,14 @@ body {
     text-wrap: balance;
   }
 }
+
+tr {
+  margin: 16px 0px;
+  border-bottom: 1px solid gray;
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px red;
+}
+
+table {
+  border-spacing: 0
+}
