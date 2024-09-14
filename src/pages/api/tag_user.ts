@@ -81,14 +81,6 @@ export default async function handler(
     },
   })
 
-  for (const user of usersToNotify) {
-    if (!user.phone) continue
-    await sendTextMessage(
-      user.phone,
-      `the target has been tagged. stay alert, gosling.`
-    )
-  }
-
   const tagger = await prisma.user.findUnique({
     where: {
       id: taggerId,
@@ -104,6 +96,14 @@ export default async function handler(
     tagged!.phone,
     `you've been tagged by ${tagged!.name.toLowerCase()}. you got +${score(currentChallenge)} points`
   )
+
+  for (const user of usersToNotify) {
+    if (!user.phone) continue
+    await sendTextMessage(
+      user.phone,
+      `the target has been tagged. stay alert, gosling.`
+    )
+  }
 
   res.status(200).json({})
 }
