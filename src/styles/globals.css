@@ -30,6 +30,10 @@ body {
     margin: 0;
     margin-bottom: 15vh;
     color: cyan;
+
+    @media (max-height: 800px) {
+      margin-bottom: 5vh;
+    }
   }
 
   & .subheading {
