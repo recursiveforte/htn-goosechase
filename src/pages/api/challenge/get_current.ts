@@ -31,7 +31,7 @@ export default async function handler(
     data: {
       createdAt: currentChallenge.createdAt,
       tagged: {
-        name: currentChallenge.tagged.badgeCode,
+        name: currentChallenge.tagged.name,
         id: currentChallenge.tagged.id
       },
       tagger: currentChallenge.tagger && {
