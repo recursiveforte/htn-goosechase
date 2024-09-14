@@ -89,7 +89,7 @@ export default async function handler(
 
   await sendTextMessage(
     tagger!.phone,
-    `you tagged ${tagged!.name}. you got +${score(currentChallenge)} points`
+    `you tagged ${tagged!.name.toLowerCase()}. you got +${score(currentChallenge)} points`
   )
 
   await sendTextMessage(
