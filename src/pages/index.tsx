@@ -9,22 +9,45 @@ import { getUserState, setUserState, UserState } from '@/lib/userState'
 import { CreateAccountResponse } from './api/user/createAccount'
 import useSWR from 'swr'
 import { User } from '@prisma/client'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 // @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json())
 
 const QrReader = dynamic(() => import('../components/QrReader'), { ssr: false })
 
+function useAvatarUrl(avatarBuffer: { data: number[] } | null): string | null {
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+  useEffect(() => {
+    if (avatarBuffer) {
+      const data = new Blob([Uint8Array.from(avatarBuffer.data)])
+      const url = URL.createObjectURL(data)
+      setAvatarUrl(url)
+      return () => URL.revokeObjectURL(url)
+    } else {
+      setAvatarUrl(null)
+    }
+  }, [avatarBuffer])
+
+  return avatarUrl
+}
+
 function LeaderboardItem({
   rank,
   name,
+  avatarBuffer,
   score,
 }: {
   rank: number
   name: string
   score: number
+  avatarBuffer: { data: number[] } | null
 }) {
+  const avatarUrl = useAvatarUrl(avatarBuffer)
+
+  const background =
+    ['#ffd61f73', '#425a72', '#ff8c374E'][rank - 1] ?? '#2f2f2f'
+
   return (
     <div
       style={{
@@ -33,15 +56,14 @@ function LeaderboardItem({
         gap: '8px',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#ff8c374E',
+        background,
         paddingTop: '8px',
         paddingBottom: '8px',
-        borderRadius: '8px',
         marginBottom: '8px',
       }}
     >
       <img
-        src="https://preview.redd.it/1k2p6tly25x61.jpg?width=640&crop=smart&auto=webp&s=8f12f643c5f765c9d563c0c4d2bec764ca29469d"
+        src={avatarUrl ?? '/favicon.png'}
         style={{ borderRadius: 999, marginLeft: '8px', marginRight: '6px' }}
         height="36px"
         width="36px"
@@ -84,6 +106,9 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
     fetcher,
     { refreshInterval: 1000 }
   )
+
+  const avatarUrl = useAvatarUrl(user?.avatarData ?? null)
+
   return (
     <div
       style={{
@@ -102,17 +127,69 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
           width: '100vw',
           paddingTop: '16px',
           paddingBottom: '16px',
-          background: '#a633d6',
+          background: 'magenta',
+          color: 'black',
         }}
       >
         <b>
-          <i>The game is being played at dinner! Join us.</i>
+          <i>the game is to be played at the food tent.</i>
         </b>{' '}
         {/* @ts-ignore */}
       </marquee>
-      {!leaderboardOpen && (
-        <>
-          {challenge && challenge.tagged.id != loggedIn.userId && (
+
+      {!leaderboardOpen && /*challenge*/ true ? (
+        /*challenge.tagged.id === loggedIn.userId*/ true ? (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexGrow: 1,
+              padding: 10,
+            }}
+          >
+            <h1 style={{ margin: 0, fontSize: '3em', marginBottom: '10px' }}>
+              you're it.
+            </h1>
+            <div className="awareness" style={{ fontSize: '1.2em' }}>
+              <p>
+                get someone to use goosechase.club to{' '}
+                <span style={{ color: 'cyan' }}>scan your badge</span>.
+              </p>
+              <p>the faster, the more points you earn.</p>
+              <p>you will be greatly rewarded.</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexGrow: 1,
+              }}
+            >
+              <p style={{ fontSize: '1.4em', margin: 0, marginTop: '16px' }}>
+                the current target is:
+              </p>
+              <h1 style={{ margin: 0 }}>
+                {challenge.tagged.name.toLowerCase()}
+              </h1>
+              <h3
+                style={{
+                  marginTop: '16px',
+                  fontWeight: 400,
+                  color: '#b8b8b8',
+                }}
+              >
+                <span style={{ color: 'magenta' }}>find them</span>, scan their
+                badge, and you'll earn POINTS.
+              </h3>
+            </div>
+
             <div
               style={{
                 width: 'min(500px, 100vw)',
@@ -123,19 +200,15 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
                 onScan={async (text) => {
                   const code = text.split('/').slice(-1)[0]
                   if (code.split('-').length !== 4) {
-                    return toast.error('Invalid QR code')
+                    return toast.error('invalid qr code')
                   }
                   if (code !== scannedCode) {
                     setScannedCode(code)
-                    toast.success('QR code scanned, your code is: ' + code, {
-                      id: 'scan_self',
-                      duration: 5000,
-                    })
                     toast.promise(
                       fetch('/api/tag_user', {
                         method: 'POST',
                         headers: {
-                          "Content-Type": "application/json"
+                          'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
                           taggedBadgeCode: code,
@@ -143,87 +216,48 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
                         }),
                       }),
                       {
-                        loading: 'Tagging...',
-                        success: <b>Tagged! Congratulations!</b>,
-                        error: <b>Looks like that wasn't the target, sorry,</b>,
+                        loading: 'scanning...',
+                        success: <b>your loyalty will be rewarded.</b>,
+                        error: <b>that wasn't the target, bozo</b>,
                       }
                     )
                   }
                 }}
               />
             </div>
-          )}
-          {challenge && challenge.tagged.id != loggedIn.userId && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexGrow: 1,
-              }}
-            >
-              <h3 style={{ margin: 0, marginTop: '16px' }}>
-                The current target is:
-              </h3>
-              <h1 style={{ margin: 0, marginTop: '16px' }}>
-                {challenge.data.tagged.name}
-              </h1>
-              <h3 style={{ margin: '16px', fontWeight: 400 }}>
-                Find them in the room, scan their code, and you'll both earn
-                points.
-              </h3>
-            </div>
-          )}
-          {challenge && challenge.tagged.id == loggedIn.userId && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexGrow: 1,
-              }}
-            >
-              <h1 style={{ margin: 0, marginTop: '16px' }}>
-                You are the target!
-              </h1>
-              <h3 style={{ margin: '16px', fontWeight: 400 }}>
-                Get tagged and you'll earn points.
-              </h3>
-            </div>
-          )}
-          {!challenge && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexGrow: 1,
-              }}
-            >
-              <h1 style={{ margin: 0, marginTop: '16px', color: '#FF69B4' }}>
-                <i>
-                  There's no challenge at the moment! Keep an eye on your phone
-                  for any texts...
-                </i>
-              </h1>
-            </div>
-          )}
-        </>
+          </>
+        )
+      ) : (
+        <div
+          className="login-form"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          <h1>hi {loginState.userState.badge.name.toLowerCase()}.</h1>
+          <div className="awareness">
+            <p>
+              <span style={{ color: 'cyan' }}>goosechase</span> is aware of you.
+            </p>
+            <p>you'll hear from us when you least expect it.</p>
+            <p>enlist your friends and you will all be rewarded.</p>
+          </div>
+        </div>
       )}
 
       {leaderboardOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: 1000 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 100 }}
-          transition={{ duration: 0.15 }}
+        <div
+          // initial={{ opacity: 0, y: 1000 }}
+          // animate={{ opacity: 1, y: 0 }}
+          // exit={{ opacity: 0, y: 100 }}
+          // transition={{ duration: 0.15 }}
           style={{
+            width: '100%',
             flexGrow: 1,
             textAlign: 'left',
-            width: 'calc(100% - 32px)',
+            padding: '10px',
             flexShrink: 1,
             overflowY: 'scroll',
             position: 'relative',
@@ -231,51 +265,52 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
           }}
         >
           <h1 style={{ margin: 0, width: '100%', marginTop: '16px' }}>
-            <u>Goose Chase Leaderboard</u>
+            <span style={{ color: 'cyan' }}>goosechase</span> leaderboard
           </h1>
+
           <p style={{ textAlign: 'left', width: '100%' }}>
-            Looking to earn points? Keep an eye on your texts for new challenges
-            and be the first to tag the target.{' '}
-            <i>(Or get lucky and be the target!)</i>
+            keep an eye on your texts.
           </p>
-          {leaderboard.map((user: any, i: number) => (
+
+          {leaderboard.slice(0, 100).map((user: any, i: number) => (
             <LeaderboardItem
               rank={i + 1}
-              name={user.badgeCode}
+              name={user.name.toLowerCase()}
+              avatarBuffer={user.avatarData}
               score={user.score}
             />
           ))}
-          <br />
-        </motion.div>
+        </div>
       )}
+
       <div
         onClick={() => setLeaderboardOpen(!leaderboardOpen)}
         style={{
-          background: '#338eda',
           paddingTop: '16px',
           paddingBottom: '16px',
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          gap: '16px',
+          gap: '10px',
           cursor: 'pointer',
+          borderTop: '2px solid cyan',
         }}
       >
         <img
-          src="https://preview.redd.it/1k2p6tly25x61.jpg?width=640&crop=smart&auto=webp&s=8f12f643c5f765c9d563c0c4d2bec764ca29469d"
+          src={avatarUrl ?? '/favicon.png'}
           style={{ borderRadius: 999, marginLeft: '16px' }}
           height="36px"
           width="36px"
         />
         <span style={{ flexGrow: 1, textAlign: 'left' }}>
-          {user?.badgeCode || 'Loading...'}
+          {user?.name.toLowerCase() || 'loading...'}
         </span>
         <span
           style={{
-            background: 'rgba(0, 0, 0, 0.3)',
+            background: '#1f1f1f',
             width: '64px',
-            borderRadius: '48px',
-            padding: '4px 8px',
+            // borderRadius: '48px',
+            padding: '2px',
           }}
         >
           #
@@ -285,11 +320,11 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
         </span>
         <span
           style={{
-            background: 'rgba(0, 0, 0, 0.3)',
+            background: '#1f1f1f',
             width: '64px',
-            borderRadius: '48px',
-            padding: '4px 8px',
-            marginRight: '16px',
+            // borderRadius: '48px',
+            padding: '2px',
+            marginRight: '10px',
           }}
         >
           🪿{' '}
