@@ -116,7 +116,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
+        height: '100%',
       }}
     >
       {/* @ts-ignore */}
@@ -269,7 +269,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
             flexShrink: 1,
             overflowY: 'scroll',
             position: 'relative',
-            height: '80vh',
+            height: '80%',
           }}
         >
           <h1 style={{ margin: 0, width: '100%', marginTop: '16px' }}>
