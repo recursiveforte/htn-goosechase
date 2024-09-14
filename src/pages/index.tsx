@@ -41,7 +41,7 @@ function Game({loginState, loggedIn}: {loginState: any, loggedIn: any}) {
         <b><i>The game is being played at dinner! Join us.</i></b> { /* @ts-ignore */}
       </marquee>
       {!leaderboardOpen && <>
-        <div style={{ width: '500px', height: '500px'}}>
+        {challenge && <div style={{ width: 'min(500px, 100vw)', height: 'min(500px, 100vw)'}}>
           <QrReader
             onScan={async (text) => {
               const code = text.split('/').slice(-1)[0]
@@ -71,7 +71,7 @@ function Game({loginState, loggedIn}: {loginState: any, loggedIn: any}) {
               }
             }}
           />
-        </div>
+        </div>}
         {challenge && <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
           <h3 style={{ margin: 0, marginTop: '16px' }}>
             The current target is:
@@ -82,8 +82,8 @@ function Game({loginState, loggedIn}: {loginState: any, loggedIn: any}) {
           <h3 style={{ margin: '16px', fontWeight: 400 }}>Find them in the room, scan their code, and you'll both earn points.</h3>
         </div>}
         {!challenge && <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
-            <h1 style={{ margin: 0, marginTop: '16px' }}>
-              There's no challenge at the moment! Keep an eye on your phone for any texts...
+            <h1 style={{ margin: 0, marginTop: '16px', color: '#FF69B4' }}>
+              <i>There's no challenge at the moment! Keep an eye on your phone for any texts...</i>
             </h1>
           </div>}
       </>}
@@ -104,10 +104,10 @@ function Game({loginState, loggedIn}: {loginState: any, loggedIn: any}) {
       <div style={{ background: '#338eda', paddingTop: '16px', paddingBottom: '16px', width: '100%', display: 'flex', alignItems: 'center', gap: '16px' }}>
         <img src="https://preview.redd.it/1k2p6tly25x61.jpg?width=640&crop=smart&auto=webp&s=8f12f643c5f765c9d563c0c4d2bec764ca29469d" style={{ borderRadius: 999, marginLeft: '16px' }} height="36px" width="36px" />
         <span style={{ flexGrow: 1, textAlign: 'left' }}>{user?.badgeCode || "Loading..."}</span>
-        <span style={{ background: 'rgba(0, 0, 0, 0.3)', borderRadius: '48px', padding: '4px 8px' }} onClick={() => setLeaderboardOpen(!leaderboardOpen)}>
+        <span style={{ background: 'rgba(0, 0, 0, 0.3)', width: '64px', borderRadius: '48px', padding: '4px 8px' }} onClick={() => setLeaderboardOpen(!leaderboardOpen)}>
           #{leaderboard &&  currentUserOnLeaderboard(leaderboard, loggedIn.userId).rank || "?"}
         </span>
-        <span style={{ background: 'rgba(0, 0, 0, 0.3)', borderRadius: '48px', padding: '4px 8px', marginRight: '16px' }} onClick={() => setLeaderboardOpen(!leaderboardOpen)}>
+        <span style={{ background: 'rgba(0, 0, 0, 0.3)', width: '64px', borderRadius: '48px', padding: '4px 8px', marginRight: '16px' }} onClick={() => setLeaderboardOpen(!leaderboardOpen)}>
           🪿 {leaderboard && currentUserOnLeaderboard(leaderboard, loggedIn.userId).score || 0}  
         </span>
       </div>
