@@ -48,7 +48,7 @@ body {
 
   & .brand {
     margin: 0;
-    margin-bottom: 12vh;
+    margin-bottom: 10vh;
     color: cyan;
 
     @media (max-height: 800px) {
