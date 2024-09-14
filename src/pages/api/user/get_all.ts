@@ -48,6 +48,7 @@ export default async function handler(
     }))
     .map((user) => ({
       ...user,
+      phone: null,
       score: scoreCollection(user.tags) + scoreCollection(user.taggings),
     })).sort((a, b) => a.score == b.score ? a.createdAt.getTime() - b.createdAt.getTime() : a.score - b.score);
   return res.json(users)

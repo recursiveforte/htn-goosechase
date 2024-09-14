@@ -42,7 +42,7 @@ export default async function handler(
 
   const user = await prisma.user.create({
     data: {
-      phone: parsedPhoneNumber.formatInternational(),
+      phone: parsedPhoneNumber.format('E.164'),
       badgeCode,
     },
   })
