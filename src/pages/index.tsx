@@ -274,14 +274,16 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
             keep an eye on your texts.
           </p>
 
-          {leaderboard.slice(0, 100).map((user: any, i: number) => (
-            <LeaderboardItem
-              rank={i + 1}
-              name={user.name.toLowerCase()}
-              avatarBuffer={user.avatarData}
-              score={user.score}
-            />
-          ))}
+          {leaderboard
+            ?.slice(0, 100)
+            .map((user: any, i: number) => (
+              <LeaderboardItem
+                rank={i + 1}
+                name={user.name.toLowerCase()}
+                avatarBuffer={user.avatarData}
+                score={user.score}
+              />
+            ))}
         </div>
       )}
 
