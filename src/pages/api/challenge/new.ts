@@ -1,16 +1,56 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/db/prisma'
+import { sendTextMessage } from '@/lib/twilio'
+import { lookupBadge } from '@/lib/hackTheNorth'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // let users = await prisma.user.findMany()
-  // let challenge = await prisma.challenge.create({
-  //   data: {
-  //     taggeeId: users[Math.floor(Math.random() * users.length)].id,
-  //   },
-  // })
-  // TODO: mass ping, restart, etc
-  // return res.json(challenge)
+  if (req.method !== 'POST') res.status(400).json({ error: 'INCORRECT_METHOD' })
+
+  const {taggedId} = req.body
+
+  if (!taggedId)
+    res.status(400).json({ error: 'MALFORMED_DATA' })
+
+
+  const tagged = await prisma.user.findUnique({where: {id: taggedId}})
+
+  const otherUsers = await prisma.user.findMany({
+    where: {
+      id: {
+        not: taggedId
+      }
+    },
+  })
+
+  if (!tagged)
+    return res.status(400).json({ error: 'RESOURCE_DNE' })
+
+  const challenge = await prisma.challenge.create({
+    data: {
+      taggedId
+    },
+  })
+
+  const taggedName = await lookupBadge(tagged.badgeCode).then(
+    (data) => data.name
+  )
+
+  await sendTextMessage(
+    tagged.phone,
+    'you are the taggee! get points by getting tagged as soon as possible.'
+  )
+
+  for (const user of otherUsers) {
+    if (!user.phone) continue
+    await sendTextMessage(
+      user.phone,
+      `a challenge begins. tag ${taggedName} ASAP
+      \ngoosechase.club`
+    )
+  }
+
+  return res.json(challenge)
 }
