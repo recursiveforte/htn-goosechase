@@ -10,6 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     },
     data: {
       taggerId: parseInt(taggerId),
+      taggedAt: new Date()
     },
   })
   // mass ping everyone: tagged!
