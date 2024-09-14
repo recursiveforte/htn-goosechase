@@ -25,12 +25,13 @@ model User {
 
 // a challenge is active if there is no tagger or it's been running for less than 10 minutes
 model Challenge {
-  id        Int       @id @default(autoincrement())
-  taggerId  Int?
-  taggedId  Int
-  createdAt DateTime  @default(now())
-  tagger    User?     @relation("tagger", fields: [taggerId], references: [id])
-  tagged    User      @relation("tagged", fields: [taggedId], references: [id])
-  taggedAt  DateTime?
-  invalidated Boolean @default(false)
+  id          Int       @id @default(autoincrement())
+  taggerId    Int?
+  taggedId    Int
+  createdAt   DateTime  @default(now())
+  tagger      User?     @relation("tagger", fields: [taggerId], references: [id])
+  tagged      User      @relation("tagged", fields: [taggedId], references: [id])
+  taggedAt    DateTime?
+  invalidated Boolean   @default(false)
+  roomName    String?
 }
