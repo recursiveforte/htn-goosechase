@@ -26,24 +26,24 @@ export default async function handler(
 ) {
   if (req.method !== 'GET') res.status(400).json({ error: 'INCORRECT_METHOD' })
 
-  const currentChallenge = await getCurrentChallenge()
+  // const currentChallenge = await getCurrentChallenge()
 
-  if (!currentChallenge) return res.status(400).json({ error: 'NO_CHALLENGE' })
+  // if (!currentChallenge) return res.status(400).json({ error: 'NO_CHALLENGE' })
 
-  res.status(200).json({
-    data: {
-      createdAt: currentChallenge.createdAt,
-      room: {
-        name: currentChallenge.room.name,
-      },
-      taggee: {
-        id: currentChallenge.taggee.id,
-        badgeCode: currentChallenge.taggee.badgeCode,
-      },
-      tagger: currentChallenge.tagger && {
-        id: currentChallenge.tagger.id,
-        badgeCode: currentChallenge.tagger.badgeCode,
-      },
-    },
-  })
+  // res.status(200).json({
+  //   data: {
+  //     createdAt: currentChallenge.createdAt,
+  //     room: {
+  //       name: currentChallenge.room.name,
+  //     },
+  //     taggee: {
+  //       id: currentChallenge.taggee.id,
+  //       badgeCode: currentChallenge.taggee.badgeCode,
+  //     },
+  //     tagger: currentChallenge.tagger && {
+  //       id: currentChallenge.tagger.id,
+  //       badgeCode: currentChallenge.tagger.badgeCode,
+  //     },
+  //   },
+  // })
 }

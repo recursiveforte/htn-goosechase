@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'Comic Sans Bundled';
+  src: url('/fonts/comic-sans-ms.ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Comic Sans Bundled';
+  src: url('/fonts/comic-sans-ms-bold.ttf');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --purple: rgb(162, 0, 255);
 }
@@ -19,7 +35,7 @@ body,
 body {
   color: #ededed;
   background: #0a0a0a;
-  font-family: 'Comic Sans MS', 'Comic Sans', sans-serif;
+  font-family: 'Comic Sans Bundled', 'Comic Sans MS', 'Comic Sans', sans-serif;
   padding: 10px;
 }
 

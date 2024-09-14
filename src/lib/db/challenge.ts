@@ -14,6 +14,5 @@ export const getCurrentChallenge = () =>
     include: {
       taggee: true,
       tagger: true,
-      room: true,
     },
   })
