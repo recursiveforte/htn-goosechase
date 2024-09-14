@@ -6,6 +6,11 @@ export default function Document() {
       <Head>
         <link rel="icon" href="/favicon.png" />
         <title>goosechase</title>
+        <script
+          defer
+          data-domain="goosechase.club"
+          src="https://plausible.io/js/script.js"
+        />
       </Head>
       <body>
         <Main />
