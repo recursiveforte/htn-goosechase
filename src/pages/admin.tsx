@@ -1,4 +1,5 @@
 import { Challenge, User } from '@prisma/client'
+import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 type Props = {}
@@ -12,15 +13,24 @@ type FullUser = User & {
 const Admin = (props: Props) => {
   const [users, setUsers] = useState<FullUser[]>([])
   const [filteredUsers, setFilteredUsers] = useState<FullUser[]>([])
+  const query = useSearchParams()
 
   useEffect(() => {
+    if (query.get('password') !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD) return
+
     fetch('/api/user/get_all')
       .then((res) => res.json())
       .then((data) => {
         setUsers(data)
         setFilteredUsers(data)
       })
-  }, [])
+  }, [query])
+
+  if (
+    !query.get('password') ||
+    query.get('password') !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD
+  )
+    return <div>Invalid password</div>
 
   return (
     <div className="admin-container">
@@ -76,6 +86,7 @@ const Admin = (props: Props) => {
                        .then((data) => {
                          console.log(data)
                        })
+
                   }}
                 >
                   Start Game
