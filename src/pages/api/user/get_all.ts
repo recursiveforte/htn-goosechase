@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../lib/prisma'
-import { Challenge } from '@prisma/client';
+import prisma from '@/lib/db/prisma'
+import { Challenge } from '@prisma/client'
 
 function score(tagging: Challenge) {
   if(tagging.taggedAt){
@@ -31,8 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       score: score(tag)
     }))
   })).map(user => ({
-     ...user,
-     score: scoreCollection(user.tags) + scoreCollection(user.taggings)
+    ...user,
+    score: scoreCollection(user.tags) + scoreCollection(user.taggings)
   }))
   return res.json(users)
 }

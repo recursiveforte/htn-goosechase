@@ -17,16 +17,28 @@ model User {
   username         String      @unique
   createdAt        DateTime    @default(now())
   lastInteractedAt DateTime    @default(now())
-  taggings         Challenge[] @relation("tagged")
+  taggings         Challenge[] @relation("taggee")
   tags             Challenge[] @relation("tagger")
+  Room             Room?       @relation(fields: [roomId], references: [id])
+  roomId           Int?
 }
 
+// a challenge is active if there is no tagger or it's been running for less than 10 minutes
 model Challenge {
-  id        String    @id @default(uuid())
+  id        Int       @id @default(autoincrement())
   taggerId  Int?
-  taggedId  Int
+  taggeeId  Int
   createdAt DateTime  @default(now())
   tagger    User?     @relation("tagger", fields: [taggerId], references: [id])
-  tagged    User      @relation("tagged", fields: [taggedId], references: [id])
+  taggee    User      @relation("taggee", fields: [taggeeId], references: [id])
   taggedAt  DateTime?
+  room      Room      @relation(fields: [roomId], references: [id])
+  roomId    Int
+}
+
+model Room {
+  id         Int         @id @default(autoincrement())
+  name       String
+  users      User[]
+  challenges Challenge[]
 }
