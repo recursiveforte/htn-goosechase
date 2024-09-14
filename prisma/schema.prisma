@@ -13,8 +13,8 @@ datasource db {
 
 model User {
   id               Int         @id @default(autoincrement())
-  phone            String?
-  username         String      @unique
+  phone            String
+  badgeCode        String      @unique
   createdAt        DateTime    @default(now())
   lastInteractedAt DateTime    @default(now())
   taggings         Challenge[] @relation("tagged")
