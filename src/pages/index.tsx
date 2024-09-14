@@ -134,6 +134,9 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
                     toast.promise(
                       fetch('/api/tag_user', {
                         method: 'POST',
+                        headers: {
+                          "Content-Type": "application/json"
+                        },
                         body: JSON.stringify({
                           taggedBadgeCode: code,
                           taggerId: loggedIn.userId,
@@ -164,7 +167,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
                 The current target is:
               </h3>
               <h1 style={{ margin: 0, marginTop: '16px' }}>
-                {challenge.tagged.name}
+                {challenge.data.tagged.name}
               </h1>
               <h3 style={{ margin: '16px', fontWeight: 400 }}>
                 Find them in the room, scan their code, and you'll both earn
