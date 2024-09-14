@@ -44,8 +44,7 @@ export default async function handler(
     },
   })
 
-
-  console.log("tagger, tagged", taggerId, tagged?.id)
+  console.log('tagger, tagged', taggerId, tagged?.id)
   if (tagged?.id == taggerId) {
     return res.status(400).json({ error: 'INCORRECT_TAGGED' })
   }
@@ -59,14 +58,15 @@ export default async function handler(
       taggedAt: new Date(),
     },
     include: {
-      tagged: true, tagger: true
-    }
+      tagged: true,
+      tagger: true,
+    },
   })
 
   const usersToNotify = await prisma.user.findMany({
     where: {
       lastInteractedAt: {
-        gt: new Date(Date.now() - 10 * 60 * 1000)
+        gt: new Date(Date.now() - 10 * 60 * 1000),
       },
       NOT: {
         OR: [
@@ -74,35 +74,32 @@ export default async function handler(
             id: taggerId,
           },
           {
-            id: tagged?.id
-          }
-        ]
-      }
+            id: tagged?.id,
+          },
+        ],
+      },
     },
   })
 
   for (const user of usersToNotify) {
     if (!user.phone) continue
-    await sendTextMessage(
-      user.phone,
-      `they’ve been tagged!`
-    )
+    await sendTextMessage(user.phone, `they’ve been tagged!`)
   }
 
   const tagger = await prisma.user.findUnique({
     where: {
       id: taggerId,
-    }
+    },
   })
 
   await sendTextMessage(
     tagger!.phone,
-    `you've tagged ${tagged!.name}! you got +${score(currentChallenge)} points`
+    `you tagged ${tagged!.name}. you got +${score(currentChallenge)} points`
   )
 
   await sendTextMessage(
     tagged!.phone,
-    `you've been tagged by ${tagged!.name}! you got +${score(currentChallenge)} points`
+    `you've been tagged by ${tagged!.name.toLowerCase()}. you got +${score(currentChallenge)} points`
   )
 
   res.status(200).json({})
