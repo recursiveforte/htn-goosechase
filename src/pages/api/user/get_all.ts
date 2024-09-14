@@ -48,6 +48,7 @@ export default async function handler(
     }))
     .map((user) => ({
       ...user,
+      phone: null,
       score: scoreCollection(user.tags) + scoreCollection(user.taggings),
     }))
   return res.json(users)
