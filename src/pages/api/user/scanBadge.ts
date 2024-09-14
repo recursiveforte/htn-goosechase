@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
+import prisma from '@/lib/db/prisma'
 import { BadgeData, lookupBadge } from '@/lib/hackTheNorth'
 import { errorString } from '@/lib/util'
 

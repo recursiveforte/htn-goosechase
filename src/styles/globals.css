@@ -2,20 +2,24 @@
   --purple: rgb(162, 0, 255);
 }
 
-html, body, #__next {
+html,
+body,
+#__next {
   height: 100%;
   margin: 0;
   box-sizing: border-box;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: inherit;
 }
 
 body {
   color: #ededed;
   background: #0a0a0a;
-  font-family: "Comic Sans MS", "Comic Sans", sans-serif;
+  font-family: 'Comic Sans MS', 'Comic Sans', sans-serif;
   padding: 10px;
 }
 
@@ -55,7 +59,8 @@ body {
     margin-top: 40px;
   }
 
-  & input, button {
+  & input,
+  button {
     font-size: 1.4em;
     display: block;
     width: 100%;
@@ -78,7 +83,7 @@ body {
 
   & button {
     background: var(--purple);
-    border-color: rgb(115, 4, 179); 
+    border-color: rgb(115, 4, 179);
     color: white;
   }
 
@@ -101,5 +106,5 @@ tr {
 }
 
 table {
-  border-spacing: 0rding
+  border-spacing: 0rding;
 }
