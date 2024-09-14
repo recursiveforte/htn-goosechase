@@ -68,7 +68,13 @@ export async function lookupBadge(badgeCode: string): Promise<BadgeData> {
 }
 
 export async function getBadgeAvatar(badge: BadgeData): Promise<Buffer | null> {
-  const avatarUrl = await getBadgeAvatarUrl(badge)
+  let avatarUrl: string | null
+  try {
+    avatarUrl = await getBadgeAvatarUrl(badge)
+  } catch (error) {
+    console.error(error)
+    return null
+  }
   if (!avatarUrl) return null
 
   const res = await fetch(avatarUrl)
