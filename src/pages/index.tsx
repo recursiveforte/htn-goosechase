@@ -112,7 +112,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
       </marquee>
       {!leaderboardOpen && (
         <>
-          {challenge && (
+          {challenge && challenge.tagged.id != loggedIn.userId && (
             <div
               style={{
                 width: 'min(500px, 100vw)',
@@ -153,7 +153,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
               />
             </div>
           )}
-          {challenge && (
+          {challenge && challenge.tagged.id != loggedIn.userId && (
             <div
               style={{
                 display: 'flex',
@@ -172,6 +172,24 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
               <h3 style={{ margin: '16px', fontWeight: 400 }}>
                 Find them in the room, scan their code, and you'll both earn
                 points.
+              </h3>
+            </div>
+          )}
+          {challenge && challenge.tagged.id == loggedIn.userId && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexGrow: 1,
+              }}
+            >
+              <h1 style={{ margin: 0, marginTop: '16px' }}>
+                You are the target!
+              </h1>
+              <h3 style={{ margin: '16px', fontWeight: 400 }}>
+                Get tagged and you'll earn points.
               </h3>
             </div>
           )}

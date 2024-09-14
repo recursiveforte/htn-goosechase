@@ -12,6 +12,7 @@ type ResponseData = {
     } | null
     tagged: {
       name: string
+      id: number
     }
   }
 } | null
@@ -30,7 +31,8 @@ export default async function handler(
     data: {
       createdAt: currentChallenge.createdAt,
       tagged: {
-        name: currentChallenge.tagged.badgeCode
+        name: currentChallenge.tagged.badgeCode,
+        id: currentChallenge.tagged.id
       },
       tagger: currentChallenge.tagger && {
         id: currentChallenge.tagger.id,
