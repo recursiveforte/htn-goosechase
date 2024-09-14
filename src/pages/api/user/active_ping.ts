@@ -12,7 +12,6 @@ export default async function handler(
 ) {
   if (req.method !== "POST") res.status(400).json({error: 'INCORRECT_METHOD'})
 
-  const data = req.body
   const userId: number = req.body.phone
 
   if (!userId) return res.status(400).json({error: 'MALFORMED_DATA'})
