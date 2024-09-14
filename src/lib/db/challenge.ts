@@ -4,6 +4,7 @@ export const getCurrentChallenge = () =>
   prisma.challenge.findFirst({
     where: {
       tagger: null,
+      invalidated: false,
       createdAt: {
         gte: new Date(Date.now() - 1000 * 60 * 10),
       },

@@ -32,4 +32,5 @@ model Challenge {
   tagger    User?     @relation("tagger", fields: [taggerId], references: [id])
   tagged    User      @relation("tagged", fields: [taggedId], references: [id])
   taggedAt  DateTime?
+  invalidated Boolean @default(false)
 }

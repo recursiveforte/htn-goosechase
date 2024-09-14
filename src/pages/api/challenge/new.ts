@@ -14,6 +14,14 @@ export default async function handler(
   if (!taggedId)
     res.status(400).json({ error: 'MALFORMED_DATA' })
 
+  await prisma.challenge.updateMany({
+    where: {
+      invalidated: false
+    },
+    data: {
+      invalidated: true
+    },
+  })
 
   const tagged = await prisma.user.findUnique({where: {id: taggedId}})
 
