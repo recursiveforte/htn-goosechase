@@ -53,3 +53,10 @@ export default async function handler(
     })).sort((a, b) => a.score == b.score ? a.createdAt.getTime() - b.createdAt.getTime() : a.score - b.score);
   return res.json(users)
 }
+
+export const config = {
+  api: {
+    responseLimit: false,
+    // responseLimit: '8mb',
+  },
+}
