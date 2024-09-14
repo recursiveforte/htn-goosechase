@@ -289,6 +289,7 @@ export default function Home(): ReactNode {
         <div className="awareness">
           <p>goosechase is aware of you.</p>
           <p>you'll hear from us when you least expect it.</p>
+          <p>enlist your friends and you will all be rewarded.</p>
         </div>
       </div>
     )
