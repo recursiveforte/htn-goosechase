@@ -1,16 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../lib/prisma'
+import { Challenge } from '@prisma/client';
 
-function score(tagging) {
+function score(tagging: Challenge) {
   if(tagging.taggedAt){
-    return Math.ceil(500 * Math.exp(-0.003 * ((tagging.taggedAt - tagging.createdAt) / 1000)));
+    return Math.ceil(500 * Math.exp(-0.003 * ((tagging.taggedAt.getTime() - tagging.createdAt.getTime()) / 1000)));
   } else {
     return 0;
   }
 }
 
-function scoreCollection(collection){
-  return collection.reduce((prev, cur) => prev + cur.score, 0)
+function scoreCollection(collection: (Challenge & {score: number})[]){
+  return collection.reduce((prev: number, cur: {score: number}) => prev + cur.score, 0)
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
