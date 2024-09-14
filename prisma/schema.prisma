@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Uses connection pooling
+  url       = env("POSTGRES_PRISMA_URL")
+  // Uses direct connection, ⚠️ make sure to keep this to `POSTGRES_URL_NON_POOLING`
+  // or you'll have dangling databases from migrations
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id               Int         @id @default(autoincrement())
+  phone            String?
+  username         String      @unique
+  createdAt        DateTime    @default(now())
+  lastInteractedAt DateTime    @default(now())
+  taggings         Challenge[] @relation("tagged")
+  tags             Challenge[] @relation("tagger")
+}
+
+model Challenge {
+  id        String    @id @default(uuid())
+  taggerId  Int?
+  taggedId  Int
+  createdAt DateTime  @default(now())
+  tagger    User?     @relation("tagger", fields: [taggerId], references: [id])
+  tagged    User      @relation("tagged", fields: [taggedId], references: [id])
+  taggedAt  DateTime?
+}

@@ -3,26 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "yarn prisma:build && next dev",
+    "build": "yarn prisma:build && next build",
     "start": "next start",
-    "lint": "next lint"
+    "prisma:dev": "prisma generate --watch",
+    "prisma:build": "prisma generate",
+    "format": "prettier --write ."
   },
   "dependencies": {
+    "@prisma/client": "^5.19.1",
     "next": "14.2.11",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
-    "react-qr-reader": "^3.0.0-beta-1"
+    "react-qr-reader": "^3.0.0-beta-1",
+    "twilio": "^5.3.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.11",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "prettier": "^3.3.3",
+    "prisma": "^5.19.1",
     "typescript": "^5"
   }
 }
