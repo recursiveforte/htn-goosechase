@@ -12,7 +12,7 @@ export const getCurrentChallenge = () =>
       id: 'desc',
     },
     include: {
-      taggee: true,
+      tagged: true,
       tagger: true,
     },
   })

@@ -6,19 +6,15 @@ type ResponseData = {
   error?: 'MALFORMED_DATA' | 'INCORRECT_METHOD' | 'NO_CHALLENGE'
   data?: {
     createdAt: Date
-    room: {
-      name: string
-    }
     tagger: {
       id: number
       badgeCode: string
     } | null
-    taggee: {
-      id: number
-      badgeCode: string
+    tagged: {
+      name: string
     }
   }
-}
+} | null
 
 export default async function handler(
   req: NextApiRequest,
@@ -26,24 +22,20 @@ export default async function handler(
 ) {
   if (req.method !== 'GET') res.status(400).json({ error: 'INCORRECT_METHOD' })
 
-  // const currentChallenge = await getCurrentChallenge()
+  const currentChallenge = await getCurrentChallenge()
 
-  // if (!currentChallenge) return res.status(400).json({ error: 'NO_CHALLENGE' })
+  if (!currentChallenge) return res.status(200).json(null)
 
-  // res.status(200).json({
-  //   data: {
-  //     createdAt: currentChallenge.createdAt,
-  //     room: {
-  //       name: currentChallenge.room.name,
-  //     },
-  //     taggee: {
-  //       id: currentChallenge.taggee.id,
-  //       badgeCode: currentChallenge.taggee.badgeCode,
-  //     },
-  //     tagger: currentChallenge.tagger && {
-  //       id: currentChallenge.tagger.id,
-  //       badgeCode: currentChallenge.tagger.badgeCode,
-  //     },
-  //   },
-  // })
+  res.status(200).json({
+    data: {
+      createdAt: currentChallenge.createdAt,
+      tagged: {
+        name: currentChallenge.tagged.badgeCode
+      },
+      tagger: currentChallenge.tagger && {
+        id: currentChallenge.tagger.id,
+        badgeCode: currentChallenge.tagger.badgeCode,
+      },
+    },
+  })
 }

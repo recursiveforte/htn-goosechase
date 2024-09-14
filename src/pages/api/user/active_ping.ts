@@ -10,13 +10,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  if (req.method !== "POST") res.status(400).json({error: 'INCORRECT_METHOD'})
+  // if (req.method !== "POST") res.status(400).json({error: 'INCORRECT_METHOD'})
 
-  const userId: number = req.body.phone
+  const userId: number = req.query.userId && parseInt(req.query.userId)
 
   if (!userId) return res.status(400).json({error: 'MALFORMED_DATA'})
 
-  await prisma.user.update({
+  let user = await prisma.user.update({
     where: {
       id: userId
     },
@@ -25,5 +25,5 @@ export default async function handler(
     }
   })
 
-  return res.status(200).json({})
+  return res.status(200).json(user)
 }

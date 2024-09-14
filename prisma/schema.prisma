@@ -17,7 +17,7 @@ model User {
   badgeCode        String      @unique
   createdAt        DateTime    @default(now())
   lastInteractedAt DateTime    @default(now())
-  taggings         Challenge[] @relation("taggee")
+  taggings         Challenge[] @relation("tagged")
   tags             Challenge[] @relation("tagger")
 }
 
@@ -25,9 +25,9 @@ model User {
 model Challenge {
   id        Int       @id @default(autoincrement())
   taggerId  Int?
-  taggeeId  Int
+  taggedId  Int
   createdAt DateTime  @default(now())
   tagger    User?     @relation("tagger", fields: [taggerId], references: [id])
-  taggee    User      @relation("taggee", fields: [taggeeId], references: [id])
+  tagged   User      @relation("tagged", fields: [taggedId], references: [id])
   taggedAt  DateTime?
 }
