@@ -51,5 +51,6 @@ export default async function handler(
       phone: null,
       score: scoreCollection(user.tags) + scoreCollection(user.taggings),
     }))
+    .sort((a, b) => b.lastInteractedAt.getTime() - a.lastInteractedAt.getTime())
   return res.json(users)
 }
