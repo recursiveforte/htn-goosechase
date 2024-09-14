@@ -137,8 +137,8 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
         {/* @ts-ignore */}
       </marquee>
 
-      {!leaderboardOpen && /*challenge*/ true ? (
-        /*challenge.tagged.id === loggedIn.userId*/ true ? (
+      {!leaderboardOpen && challenge ? (
+        challenge.tagged.id === loggedIn.userId ? (
           <div
             style={{
               display: 'flex',
