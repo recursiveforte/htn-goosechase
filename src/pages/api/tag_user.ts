@@ -85,8 +85,7 @@ export default async function handler(
     if (!user.phone) continue
     await sendTextMessage(
       user.phone,
-      `they’ve been tagged!
-      \ngoosechase.club`
+      `they’ve been tagged!`
     )
   }
 
@@ -103,7 +102,7 @@ export default async function handler(
 
   await sendTextMessage(
     tagged!.phone,
-    `you've been tagged by ${tagged!.name}! you got +${score(currentChallenge)}`
+    `you've been tagged by ${tagged!.name}! you got +${score(currentChallenge)} points`
   )
 
   res.status(200).json({})

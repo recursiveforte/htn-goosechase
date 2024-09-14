@@ -40,16 +40,14 @@ export default async function handler(
 
   await sendTextMessage(
     tagged.phone,
-    'you are the taggee! get points by getting tagged as soon as possible.'
+    'you are the taggee! get points by getting tagged as soon as possible.\n\ngoosechase.club\nSTOP to leave the game'
   )
 
   for (const user of otherUsers) {
     if (!user.phone) continue
     await sendTextMessage(
       user.phone,
-      `a challenge begins. tag ${taggedName} ASAP
-      \ngoosechase.club
-      \n\nSTOP to opt out`
+      `a challenge begins. tag ${taggedName} ASAP\n\ngoosechase.club\nSTOP to leave the game`
     )
   }
 
