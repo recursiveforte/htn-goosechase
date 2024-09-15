@@ -133,7 +133,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
         <b>
           <i>
             the game is to be played at{' '}
-            {challenge?.data?.roomName ?? 'the food tent'}.
+            {process.env.LOCATION}.
           </i>
         </b>{' '}
         {/* @ts-ignore */}

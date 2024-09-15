@@ -13,7 +13,6 @@ type FullUser = User & {
 const Admin = (props: Props) => {
   const [users, setUsers] = useState<FullUser[]>([])
   const [filteredUsers, setFilteredUsers] = useState<FullUser[]>([])
-  const [roomName, setRoomName] = useState('the food tent')
   const query = useSearchParams()
 
   useEffect(() => {
@@ -52,17 +51,6 @@ const Admin = (props: Props) => {
         />
       </div>
 
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Room Name"
-          className="search-input"
-          onChange={(e) => {
-            setRoomName(e.target.value)
-          }}
-        />
-      </div>
-
       <table className="admin-table">
         <thead>
           <tr>
@@ -94,7 +82,6 @@ const Admin = (props: Props) => {
                       },
                       body: JSON.stringify({
                         taggedId: user.id,
-                        roomName,
                       }),
                     })
                       .then((res) => res.json())

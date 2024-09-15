@@ -6,7 +6,6 @@ type ResponseData = {
   error?: 'MALFORMED_DATA' | 'INCORRECT_METHOD' | 'NO_CHALLENGE'
   data?: {
     createdAt: Date,
-    roomName: string | null,
     tagger: {
       id: number
       badgeCode: string
@@ -31,7 +30,6 @@ export default async function handler(
   res.status(200).json({
     data: {
       createdAt: currentChallenge.createdAt,
-      roomName: currentChallenge.roomName,
       tagged: {
         name: currentChallenge.tagged.name,
         id: currentChallenge.tagged.id
