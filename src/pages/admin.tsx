@@ -11,20 +11,18 @@ type FullUser = User & {
   tags: Challenge[]
 }
 
+// @ts-ignore
+const fetcher = (...args) => fetch(...args).then(res => res.json())
+
 const Admin = (props: Props) => {
-  const [users, setUsers] = useState<FullUser[]>([])
+  const { data: users, error, isLoading } = useSWR('/api/user/get_all', fetcher)
   const [filteredUsers, setFilteredUsers] = useState<FullUser[]>([])
   const [password, setPassword] = useState("")
   const router = useRouter()
 
   useEffect(() => {
-    fetch('/api/user/get_all')
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data)
-        setFilteredUsers(data)
-      })
-  }, [])
+    setFilteredUsers(users)
+  }, [users])
 
   useEffect(() => {
     const password = router.query.password as string ?? ""
