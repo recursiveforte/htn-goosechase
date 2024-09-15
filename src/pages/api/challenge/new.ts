@@ -58,7 +58,7 @@ you will be greatly rewarded.
     `.trim()
   )
 
-  for (const user of otherUsers) {
+  /*for (const user of otherUsers) {
     if (!user.phone) continue
     await sendTextMessage(
       user.phone,
@@ -70,7 +70,7 @@ find ${taggedName.toLowerCase()} ASAP and scan their badge with goosechase.club 
 you will be greatly rewarded. (or reply STOP to leave the game forever)
       `.trim()
     )
-  }
+  }*/
 
   return res.json(challenge)
 }
