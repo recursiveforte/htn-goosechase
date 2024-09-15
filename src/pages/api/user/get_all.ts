@@ -46,15 +46,20 @@ export default async function handler(
         score: score(tag),
       })),
     }))
-    .map(user => ({
+    .map((user) => ({
       ...user,
       phone: null,
       score: scoreCollection(user.tags) + scoreCollection(user.taggings),
-    })).sort((a, b) => a.score == b.score ? a.createdAt.getTime() - b.createdAt.getTime() : a.score - b.score)
+    }))
+    .sort((a, b) =>
+      a.score == b.score
+        ? a.createdAt.getTime() - b.createdAt.getTime()
+        : b.score - a.score
+    )
     .map((user, i) => ({
       ...user,
-      avatarData: i > 50 ? null : user.avatarData
-    }));
+      avatarData: i > 50 ? null : user.avatarData,
+    }))
   return res.json(users)
 }
 
