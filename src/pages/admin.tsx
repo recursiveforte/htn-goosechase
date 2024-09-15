@@ -69,7 +69,7 @@ const Admin = (props: Props) => {
           </tr>
         </thead>
         <tbody>
-          {filteredUsers.map((user) => (
+          {filteredUsers.sort((a, b) => a.lastInteractedAt.getTime() - b.lastInteractedAt.getTime()).map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
               <td>{user.name}</td>
