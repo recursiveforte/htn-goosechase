@@ -97,13 +97,13 @@ export default async function handler(
     `you've been tagged by ${tagger!.name.toLowerCase()}. you got +${score(currentChallenge)} points`
   )
 
-  for (const user of usersToNotify) {
+  /*for (const user of usersToNotify) {
     if (!user.phone) continue
     await sendTextMessage(
       user.phone,
       `the target has been tagged. stay alert, gosling.`
     )
-  }
+  }*/
 
   res.status(200).json({})
 }
