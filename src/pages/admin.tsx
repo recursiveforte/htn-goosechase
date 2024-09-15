@@ -17,7 +17,13 @@ const Admin = (props: Props) => {
   const [password, setPassword] = useState("")
   const router = useRouter()
 
-  const [textMessage, setTextMessage] = useState('');
+  const [textMessage, setTextMessage] = useState(`
+a challenge begins in ${process.env.NEXT_PUBLIC_LOCATION}.
+
+find the target ASAP and scan their badge with goosechase.club to earn points.
+
+you will be greatly rewarded. (or reply STOP to leave the game forever)
+  `.trim());
 
   useEffect(() => {
     fetch('/api/user/get_all')
@@ -62,8 +68,8 @@ const Admin = (props: Props) => {
         />
       </div>
       <div className="search-container">
-        <input
-          type="text"
+        <textarea
+          style={{ height: 200 }}
           placeholder="custom message"
           className="search-input"
           value={textMessage}
@@ -84,21 +90,7 @@ const Admin = (props: Props) => {
             }),
           }).then(data => data.text())
             .then(data => alert("message sent:\n\n" + data))
-        }}>send custom message</button>
-        <button onClick={() => {
-          const cont = confirm(`are you SURE you want to start the game + ping ${users.length} people??`)
-          if (cont) fetch('/api/mass_text_dangerous/start_game', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              password,
-              message: textMessage
-            }),
-          }).then(data => data.text())
-          .then(data => alert("message sent:\n\n" + data))
-        }}>send default "game starting" message</button>
+        }}>send message</button>
       </div>
 
       <table className="admin-table">
