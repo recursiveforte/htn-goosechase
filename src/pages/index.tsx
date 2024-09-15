@@ -133,7 +133,7 @@ function Game({ loginState, loggedIn }: { loginState: any; loggedIn: any }) {
         <b>
           <i>
             the game is to be played at{' '}
-            {process.env.LOCATION}.
+            {process.env.NEXT_PUBLIC_LOCATION}.
           </i>
         </b>{' '}
         {/* @ts-ignore */}
