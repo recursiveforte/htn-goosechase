@@ -13,6 +13,20 @@ export interface BadgeData {
 }
 
 export async function lookupBadge(badgeCode: string): Promise<BadgeData> {
+  if (badgeCode === "pecan-ruling-faculty-content") {
+    return {
+      name: "Edward Li",
+      role: "sponsor",
+      pronouns: ["he/him"],
+
+      facebookLink: "",
+      githubLink: "https://github.com/EdwardJXLi",
+      instagramLink: "",
+      linkedinLink: "",
+      twitterLink: "",
+    }
+  }
+
   const res = await fetch('https://api.hackthenorth.com/v3/graphql', {
     method: 'POST',
     headers: {

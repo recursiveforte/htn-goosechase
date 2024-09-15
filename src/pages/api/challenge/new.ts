@@ -29,14 +29,6 @@ export default async function handler(
 
   const tagged = await prisma.user.findUnique({ where: { id: taggedId } })
 
-  const otherUsers = await prisma.user.findMany({
-    where: {
-      id: {
-        not: taggedId,
-      },
-    },
-  })
-
   if (!tagged) return res.status(400).json({ error: 'RESOURCE_DNE' })
 
   const challenge = await prisma.challenge.create({
@@ -44,10 +36,6 @@ export default async function handler(
       taggedId,
     },
   })
-
-  const taggedName = await lookupBadge(tagged.badgeCode).then(
-    (data) => data.name
-  )
 
   await sendTextMessage(
     tagged.phone,
