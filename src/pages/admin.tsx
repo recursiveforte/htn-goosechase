@@ -1,6 +1,7 @@
 import { Challenge, User } from '@prisma/client'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
 type Props = {}
 
@@ -13,24 +14,23 @@ type FullUser = User & {
 const Admin = (props: Props) => {
   const [users, setUsers] = useState<FullUser[]>([])
   const [filteredUsers, setFilteredUsers] = useState<FullUser[]>([])
-  const query = useSearchParams()
+  const [password, setPassword] = useState("")
+  const router = useRouter()
 
   useEffect(() => {
-    if (query.get('password') !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD) return
-
     fetch('/api/user/get_all')
       .then((res) => res.json())
       .then((data) => {
         setUsers(data)
         setFilteredUsers(data)
       })
-  }, [query])
+  }, [])
 
-  if (
-    !query.get('password') ||
-    query.get('password') !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD
-  )
-    return <div>Invalid password</div>
+  useEffect(() => {
+    const password = router.query.password as string ?? ""
+    setPassword(password)
+  }, [router])
+  
 
   return (
     <div className="admin-container">
@@ -49,6 +49,15 @@ const Admin = (props: Props) => {
             setFilteredUsers(filteredUsers)
           }}
         />
+          <input
+            type="text"
+            placeholder="Input password"
+            className="search-input"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
+          />
       </div>
 
       <table className="admin-table">
@@ -82,6 +91,7 @@ const Admin = (props: Props) => {
                       },
                       body: JSON.stringify({
                         taggedId: user.id,
+                        password
                       }),
                     })
                       .then((res) => res.json())

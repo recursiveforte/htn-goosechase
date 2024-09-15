@@ -10,10 +10,13 @@ export default async function handler(
   if (req.method !== 'POST')
     return res.status(400).json({ error: 'INCORRECT_METHOD' })
 
-  const { taggedId } = req.body
+  const { taggedId, password } = req.body
 
-  if (!taggedId)
+  if (!taggedId || !password)
     return res.status(400).json({ error: 'MALFORMED_DATA' })
+
+  if (password != process.env.ADMIN_PASSWORD)
+    return res.status(403).json({ error: 'INCORRECT_PASSWORD' })
 
   await prisma.challenge.updateMany({
     where: {

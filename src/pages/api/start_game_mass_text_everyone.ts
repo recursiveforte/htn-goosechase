@@ -5,7 +5,7 @@ import { sendTextMessage } from '@/lib/twilio'
 import { score } from '@/pages/api/user/get_all'
 
 type ResponseData = {
-  error?: 'INCORRECT_METHOD'
+  error?: 'INCORRECT_METHOD' | 'MALFORMED_DATA' | 'INCORRECT_PASSWORD'
   message?: 'ok'
 }
 
@@ -14,6 +14,14 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method !== 'POST') res.status(400).json({ error: 'INCORRECT_METHOD' })
+
+  const { password } = req.body
+
+  if (!password)
+    return res.status(400).json({ error: 'MALFORMED_DATA' })
+
+  if (password != process.env.ADMIN_PASSWORD)
+    return res.status(403).json({ error: 'INCORRECT_PASSWORD' })
 
   const usersToNotify = await prisma.user.findMany()
 
