@@ -15,7 +15,7 @@ type FullUser = User & {
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 const Admin = (props: Props) => {
-  const { data: users, error, isLoading } = useSWR('/api/user/get_all', fetcher)
+  const { data: users, error, isLoading } = useSWR('/api/user/get_all', fetcher, { refreshInterval: 1000 })
   const [filteredUsers, setFilteredUsers] = useState<FullUser[]>([])
   const [password, setPassword] = useState("")
   const router = useRouter()
