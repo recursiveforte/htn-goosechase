@@ -17,6 +17,8 @@ const Admin = (props: Props) => {
   const [password, setPassword] = useState("")
   const router = useRouter()
 
+  const [textMessage, setTextMessage] = useState('');
+
   useEffect(() => {
     fetch('/api/user/get_all')
       .then((res) => res.json())
@@ -49,15 +51,54 @@ const Admin = (props: Props) => {
             setFilteredUsers(filteredUsers)
           }}
         />
-          <input
-            type="text"
-            placeholder="Input password"
-            className="search-input"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value)
-            }}
-          />
+        <input
+          type="text"
+          placeholder="Input password"
+          className="search-input"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value)
+          }}
+        />
+      </div>
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="custom message"
+          className="search-input"
+          value={textMessage}
+          onChange={(e) => {
+            setTextMessage(e.target.value)
+          }}
+        />
+        <button onClick={() => {
+          const cont = confirm(`are you SURE you want to send this text to ${users.length} people??\n\n${textMessage}`)
+          if (cont) fetch('/api/mass_text_dangerous/any_message', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              password,
+              message: textMessage
+            }),
+          }).then(data => data.text())
+            .then(data => alert("message sent:\n\n" + data))
+        }}>send custom message</button>
+        <button onClick={() => {
+          const cont = confirm(`are you SURE you want to start the game + ping ${users.length} people??`)
+          if (cont) fetch('/api/mass_text_dangerous/start_game', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              password,
+              message: textMessage
+            }),
+          }).then(data => data.text())
+          .then(data => alert("message sent:\n\n" + data))
+        }}>send default "game starting" message</button>
       </div>
 
       <table className="admin-table">
@@ -91,7 +132,7 @@ const Admin = (props: Props) => {
                       },
                       body: JSON.stringify({
                         taggedId: user.id,
-                        password
+                        password,
                       }),
                     })
                       .then((res) => res.json())

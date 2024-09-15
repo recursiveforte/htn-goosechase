@@ -1,4 +1,4 @@
-import prisma from '../../lib/db/prisma'
+import prisma from '../../../lib/db/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getCurrentChallenge } from '@/lib/db/challenge'
 import { sendTextMessage } from '@/lib/twilio'
@@ -29,7 +29,7 @@ export default async function handler(
     return sendTextMessage(
       user.phone,
       `
-hacker: a challenge begins in ${process.env.NEXT_PUBLIC_LOCATION}.
+a challenge begins in ${process.env.NEXT_PUBLIC_LOCATION}.
 
 find the target ASAP and scan their badge with goosechase.club to earn points.
 
