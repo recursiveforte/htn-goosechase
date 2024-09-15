@@ -29,7 +29,7 @@ export default async function handler(
     return sendTextMessage(
       user.phone,
       `
-a challenge begins in ${process.env.NEXT_PUBLIC_LOCATION}.
+hacker: a challenge begins in ${process.env.NEXT_PUBLIC_LOCATION}.
 
 find the target ASAP and scan their badge with goosechase.club to earn points.
 
